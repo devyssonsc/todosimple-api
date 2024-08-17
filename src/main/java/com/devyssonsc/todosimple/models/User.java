@@ -5,10 +5,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -41,7 +45,8 @@ public class User {
     @Size(groups = {CreateUser.class, UpdateUser.class}, min = 2, max = 60)
     private String password;
 
-    //private List<Task> tasks = new ArrayList<Task>();
+    @OneToMany(mappedBy = "user")
+    private List<Task> tasks = new ArrayList<Task>();
 
 
 
@@ -80,30 +85,35 @@ public class User {
         this.password = password;
     }
 
+
+    public List<Task> getTasks() {
+        return this.tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+
     @Override
     public boolean equals(Object obj)
     {
-        if(obj == this)
-        {
+        if(obj == this) {
             return true;
         }
-        if(obj == null)
-        {
+        if(obj == null) {
             return false;
         }
-        if(!(obj instanceof User))
-        {
+        if(!(obj instanceof User)) {
             return false;
         }
+
         User other = (User) obj;
-        if(this.id == null)
-        {
-            if(other.id != null)
-            {
+        if(this.id == null) {
+            if(other.id != null) {
                 return false;
             }
-            else if(!this.id.equals(other.id))
-            {
+            else if(!this.id.equals(other.id)) {
                 return false;
             }
         }
