@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.devyssonsc.todosimple.models.User;
-import com.devyssonsc.todosimple.repositories.TaskRepository;
 import com.devyssonsc.todosimple.repositories.UserRepository;
 
 @Service
@@ -16,12 +15,11 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private TaskRepository taskRepository;
-
     public User findById(Long id)
     {
+        // Optional é uma classe que foi introduzida para lidar com a possibilidade de um valor estar ausente. Ele fornece métodos para verificar se um valor está presente ou não e para obter o valor de forma segura.
         Optional<User> user = this.userRepository.findById(id);
+        // osElseThrow() retorna o valor contido no objeto Optional se estiver presente. Caso contrário, lança uma exceção do tipo NoSuchElementException com uma mensagem específica informando que nenhum valor está presente.
         return user.orElseThrow(() -> new RuntimeException(
             "Usuário não encontrado! Id: " + id + ", Tipo: " + User.class.getName()
         ));
@@ -42,8 +40,6 @@ public class UserService {
         //nesse caso nunca vai criar pq na linha anterior o id está sendo anulado
         obj = this.userRepository.save(obj);
 
-        //caso o user já seja criado com tasks
-        this.taskRepository.saveAll(obj.getTasks());
         return obj;
     }
 
