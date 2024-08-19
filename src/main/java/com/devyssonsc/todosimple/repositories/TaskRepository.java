@@ -11,6 +11,7 @@ import java.util.List;
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
 
+    //Método que retorna uma lista com as tasks de um user
     List<Task> findByUser_Id(Long id);
 
     // @Query(value = "SELECT t FROM Task z WHERE t.user.id = :id")
