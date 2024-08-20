@@ -20,9 +20,9 @@ import com.devyssonsc.todosimple.models.Task;
 import com.devyssonsc.todosimple.models.User.CreateUser;
 import com.devyssonsc.todosimple.models.User.UpdateUser;
 import com.devyssonsc.todosimple.services.TaskService;
+import com.devyssonsc.todosimple.services.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -35,11 +35,22 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
+    @Autowired
+    private UserService userService;
+    
     @GetMapping("/{id}")
     public ResponseEntity<Task> findById(@PathVariable Long id)
     {
         Task obj = taskService.findById(id);
         return ResponseEntity.ok().body(obj);
+    }
+    
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Task>> findAllByUserId(@PathVariable Long userId)
+    {
+        this.userService.findById(userId);
+        List<Task> tasks = this.taskService.findAllByUserId(userId);
+        return ResponseEntity.ok().body(tasks);
     }
 
     @PostMapping
@@ -64,17 +75,11 @@ public class TaskController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> update(@Valid Long id)
+    public ResponseEntity<Void> delete(@PathVariable Long id)
     {
-        taskService.delete(id);
+        this.taskService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Task>> findAllByUserId(@PathVariable Long id)
-    {
-        List<Task> tasks = this.taskService.findAllByUserId(id);
-        return ResponseEntity.ok().body(tasks);
-    }
 
 }
