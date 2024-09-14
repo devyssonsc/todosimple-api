@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.devyssonsc.todosimple.models.User;
 import com.devyssonsc.todosimple.repositories.UserRepository;
+import com.devyssonsc.todosimple.services.exceptions.DataBindingViolationException;
+import com.devyssonsc.todosimple.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class UserService {
@@ -20,7 +22,7 @@ public class UserService {
         // Optional é uma classe que foi introduzida para lidar com a possibilidade de um valor estar ausente. Ele fornece métodos para verificar se um valor está presente ou não e para obter o valor de forma segura.
         Optional<User> user = this.userRepository.findById(id);
         // osElseThrow() retorna o valor contido no objeto Optional se estiver presente. Caso contrário, lança uma exceção do tipo NoSuchElementException com uma mensagem específica informando que nenhum valor está presente.
-        return user.orElseThrow(() -> new RuntimeException(
+        return user.orElseThrow(() -> new ObjectNotFoundException(
             "Usuário não encontrado! Id: " + id + ", Tipo: " + User.class.getName()
         ));
     }
@@ -64,7 +66,7 @@ public class UserService {
         try {
             this.userRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Não é possível excluir pois há entidades relacionadas!");
+            throw new DataBindingViolationException("Não é possível excluir pois há entidades relacionadas!");
         }
     }
 }
